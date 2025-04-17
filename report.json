@@ -1,0 +1,26 @@
+Feature: Account-related endpoints # features/account.feature:1
+
+  Scenario: Get open orders for active symbol                             # features/account.feature:3
+    When I send GET request to "/api/v3/openOrders" with symbol "BTCUSDT" # features/steps/base_steps.py:29
+    Then the response status should be 200                                # features/steps/base_steps.py:50
+    And the response should be a list (possibly empty)                    # features/steps/base_steps.py:55
+
+  Scenario: Get open orders with invalid symbol                              # features/account.feature:8
+    When I send GET request to "/api/v3/openOrders" with symbol "FAKESYMBOL" # features/steps/base_steps.py:29
+    Then the response status should be 400                                   # features/steps/base_steps.py:50
+    And the response should contain error message "Invalid symbol"           # features/steps/base_steps.py:77
+
+  Scenario: Fetch trade history                                         # features/account.feature:13
+    When I send GET request to "/api/v3/myTrades" with symbol "BTCUSDT" # features/steps/base_steps.py:29
+    Then the response status should be 200                              # features/steps/base_steps.py:50
+    And the response should contain a list of trades                    # features/steps/base_steps.py:60
+
+  Scenario: Fetch account balance                                   # features/account.feature:18
+    When I send GET request to "/api/v3/account" with valid API key # features/steps/base_steps.py:34
+    Then the response status should be 200                          # features/steps/base_steps.py:50
+    And the response should include balances                        # features/steps/base_steps.py:66
+
+  Scenario: Fetch account balance with wrong secret                  # features/account.feature:23
+    When I send GET request to "/api/v3/account" with invalid secret # features/steps/base_steps.py:39
+    Then the response status should be 400                           # features/steps/base_steps.py:50
+
